@@ -80,7 +80,11 @@ class CrossWord {
   getSpace(PosicaoBase posicao) {
     listPosicoesLivres = [];
     listPosicoesLivres.add(_getSpaceRight(posicao));
-    print(listPosicoesLivres[0].casasLivres);
+    listPosicoesLivres.add(_getSpaceLeft(posicao));
+    listPosicoesLivres.forEach((p) {
+      print(
+          ' coluna base de calculo ${posicao.coluna} ${p.casasLivres} na direção ${p.direcao}');
+    });
   }
 
   PosicoesLivres _getSpaceRight(PosicaoBase posicao) {
@@ -94,5 +98,18 @@ class CrossWord {
       }
     }
     return PosicoesLivres(Direcao.right, (c - 1) - posicao.coluna);
+  }
+
+  PosicoesLivres _getSpaceLeft(PosicaoBase posicao) {
+    bool naoAchou = true;
+    int c = posicao.coluna;
+    while (c >= 0 && naoAchou) {
+      if (matrix[posicao.linha][c] == null) {
+        c--;
+      } else {
+        naoAchou = false;
+      }
+    }
+    return PosicoesLivres(Direcao.left, posicao.coluna - c - 1);
   }
 }
