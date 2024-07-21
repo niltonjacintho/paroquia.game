@@ -81,9 +81,11 @@ class CrossWord {
     listPosicoesLivres = [];
     listPosicoesLivres.add(_getSpaceRight(posicao));
     listPosicoesLivres.add(_getSpaceLeft(posicao));
+    listPosicoesLivres.add(_getSpaceTop(posicao));
+    listPosicoesLivres.add(_getSpaceDown(posicao));
     listPosicoesLivres.forEach((p) {
       print(
-          ' coluna base de calculo ${posicao.coluna} ${p.casasLivres} na direção ${p.direcao}');
+          ' coluna base de calculo - coluna:${posicao.coluna} linha:${posicao.linha} ${p.casasLivres} na direção ${p.direcao}');
     });
   }
 
@@ -97,7 +99,7 @@ class CrossWord {
         naoAchou = false;
       }
     }
-    return PosicoesLivres(Direcao.right, (c - 1) - posicao.coluna);
+    return PosicoesLivres(Direcao.right, (c) - posicao.coluna);
   }
 
   PosicoesLivres _getSpaceLeft(PosicaoBase posicao) {
@@ -111,5 +113,33 @@ class CrossWord {
       }
     }
     return PosicoesLivres(Direcao.left, posicao.coluna - c - 1);
+  }
+
+  PosicoesLivres _getSpaceTop(PosicaoBase posicao) {
+    bool naoAchou = true;
+    int l = posicao.linha;
+    while (l >= 0 && naoAchou) {
+      if (matrix[l][posicao.coluna] == null) {
+        l--;
+      } else {
+        naoAchou = false;
+      }
+    }
+    print('VALOR DE L $l');
+    return PosicoesLivres(Direcao.top, posicao.linha - l);
+  }
+
+  PosicoesLivres _getSpaceDown(PosicaoBase posicao) {
+    bool naoAchou = true;
+    int l = posicao.linha;
+    while (l <= matrixLinhas - 1 && naoAchou) {
+      if (matrix[l][posicao.coluna] == null) {
+        l++;
+      } else {
+        naoAchou = false;
+      }
+    }
+    print('VALOR DE L $l');
+    return PosicoesLivres(Direcao.down, l - posicao.linha + 1 );
   }
 }
