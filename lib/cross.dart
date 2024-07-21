@@ -38,12 +38,13 @@ class CrossWord {
   List<Palavra> palavras = [];
   List<String> listPalavras = ['bola', 'banana', 'santo', 'pipa', 'disco'];
   List<PosicoesLivres> listPosicoesLivres = [];
+  Palavra palavraAtual = Palavra('', PosicaoBase(), Direcao.top, false);
   final matrixLinhas = 10;
   final matrizColunas = 10;
 
   CrossWord() {
     listPalavras.forEach(
-        (v) => palavras.add(Palavra(v, PosicaoBase(), Direcao.top, false)));
+        (v) => palavras.add(Palavra(v, PosicaoBase(), Direcao.top, true)));
   }
 
   PosicaoBase getRandomPosition() {
@@ -77,12 +78,20 @@ class CrossWord {
     }
   }
 
-  getSpace(PosicaoBase posicao) {
+  _initPosicoesLivres() {
     listPosicoesLivres = [];
-    listPosicoesLivres.add(_getSpaceRight(posicao));
-    listPosicoesLivres.add(_getSpaceLeft(posicao));
-    listPosicoesLivres.add(_getSpaceTop(posicao));
-    listPosicoesLivres.add(_getSpaceDown(posicao));
+    listPosicoesLivres.add(PosicoesLivres(Direcao.top, 0));
+    listPosicoesLivres.add(PosicoesLivres(Direcao.down, 0));
+    listPosicoesLivres.add(PosicoesLivres(Direcao.left, 0));
+    listPosicoesLivres.add(PosicoesLivres(Direcao.right, 0));
+  }
+
+  getSpace(PosicaoBase posicao) {
+    _initPosicoesLivres();
+    listPosicoesLivres[Direcao.right.index] = _getSpaceRight(posicao);
+    listPosicoesLivres[Direcao.left.index] = _getSpaceLeft(posicao);
+    listPosicoesLivres[Direcao.top.index] = _getSpaceTop(posicao);
+    listPosicoesLivres[Direcao.down.index] = _getSpaceDown(posicao);
     listPosicoesLivres.forEach((p) {
       print(
           ' coluna base de calculo - coluna:${posicao.coluna} linha:${posicao.linha} ${p.casasLivres} na direção ${p.direcao}');
@@ -140,6 +149,67 @@ class CrossWord {
       }
     }
     print('VALOR DE L $l');
-    return PosicoesLivres(Direcao.down, l - posicao.linha + 1 );
+    return PosicoesLivres(Direcao.down, l - posicao.linha + 1);
+  }
+
+  Palavra getNextWord() {
+    for (var v in palavras) {
+      print('${v.nome} - ${v.livre}');
+      if (v.nome.length <=
+              listPosicoesLivres[Direcao.right.index].casasLivres &&
+          v.livre) {
+        palavraAtual = v;
+        palavraAtual.direcao = Direcao.right;
+        return palavraAtual;
+      } else if (v.nome.length <=
+              listPosicoesLivres[Direcao.left.index].casasLivres &&
+          v.livre) {
+        palavraAtual = v;
+        palavraAtual.direcao = Direcao.left;
+        return palavraAtual;
+      } else if (v.nome.length <=
+              listPosicoesLivres[Direcao.top.index].casasLivres &&
+          v.livre) {
+        palavraAtual = v;
+        palavraAtual.direcao = Direcao.top;
+        return palavraAtual;
+      } else if (v.nome.length <=
+              listPosicoesLivres[Direcao.down.index].casasLivres &&
+          v.livre) {
+        palavraAtual = v;
+        palavraAtual.direcao = Direcao.down;
+        return palavraAtual;
+      } else {
+        return Palavra('', PosicaoBase(), Direcao.right, true);
+      }
+    }
+
+    return palavraAtual;
+  }
+
+  writeWord(PosicaoBase p) {
+    if (listPosicoesLivres[Direcao.right.index].casasLivres >=
+        palavraAtual.nome.trim().length) {
+      _writeRight(p);
+    }
+  }
+
+  _writeRight(PosicaoBase p) {
+    print(
+        'PALAVRA ATUAL (${palavraAtual.nome}) ${Direcao.top.index} - P.coluna ${p.coluna} - Matrix ${matrix[p.linha].length} ');
+    var c = p.coluna;
+    var nomeArray = palavraAtual.nome.split('');
+    for (var i = 0; i <= palavraAtual.nome.trim().length - 1; i++) {
+      try {
+        print('NOMEARRAY de i $i');
+        matrix[p.linha][c] = nomeArray[i];
+      } catch (e) {
+        print('ERRO COM C = $c');
+      }
+
+      print('C $c - I $i- matrix ${matrix[p.linha][c]}');
+      c++;
+    }
+    print('saiu do for');
   }
 }
