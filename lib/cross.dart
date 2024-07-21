@@ -55,6 +55,20 @@ class CrossWord {
     return p;
   }
 
+  montarGrid() {
+    var x = getNextWord();
+    while (x.nome != '') {
+      PosicaoBase p = getRandomPosition();
+      getSpace(p);
+      var x = getNextWord();
+      print('PALAVRA SELECIONADA ${x.nome} ${x.direcao}');
+
+      writeWord(p);
+      print(palavraAtual.nome);
+      x = getNextWord();
+    }
+  }
+
   initMatrix() {
     for (var i = 0; i < matrixLinhas; i++) {
       List<dynamic> list = [];
