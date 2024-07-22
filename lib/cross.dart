@@ -56,11 +56,12 @@ class CrossWord {
   }
 
   montarGrid() {
+    _initPosicoesLivres();
     var x = getNextWord();
     while (x.nome != '') {
       PosicaoBase p = getRandomPosition();
       getSpace(p);
-      var x = getNextWord();
+      // var x = getNextWord();
       print('PALAVRA SELECIONADA ${x.nome} ${x.direcao}');
 
       writeWord(p);

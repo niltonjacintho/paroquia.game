@@ -5,7 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "paroquia.game",
+            "name": "Dart",
+            "type": "dart",
+            "request": "launch",
+            "program": "bin/cross.dart"
+        },
+        {
+            "name": "paroquiagame",
             "request": "launch",
             "type": "dart"
         }
